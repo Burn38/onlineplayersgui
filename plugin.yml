@@ -1,6 +1,6 @@
 name: onlineplayersgui
 version: 3.1
-main: net.craftyourworld.burn38.onlineplayersgui.OnlinePlayersGUIMain
+main: my.burn38.onlineplayersgui.OnlinePlayersGUIMain
 author: Burn38
 depend: [Essentials]
 softdepend: [Vault, Autorank]
