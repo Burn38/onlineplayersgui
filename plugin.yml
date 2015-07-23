@@ -1,0 +1,10 @@
+name: onlineplayersgui
+version: 3.1
+main: net.craftyourworld.burn38.onlineplayersgui.OnlinePlayersGUIMain
+author: Burn38
+depend: [Essentials]
+softdepend: [Vault, Autorank]
+commands:
+    onp:
+        description: "[onlineplayersgui] Use /onp help to get more informations."
+        usage: "[onlineplayersgui] Type /onp help to get more help."

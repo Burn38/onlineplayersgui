@@ -1,0 +1,286 @@
+#ONLINEPLAYERSGUI by Burn38. Message support color codes with the character '&' but they don't support JSON format.
+# some tags are available on most message: 
+#   - %pluginName%, %pluginVersion%, %author%, %prefix%, and %tag% (same as %prefix%) will work on everything
+#   - %permission%, %command%, %target%, %player% (the command sender), %home%, %jail%, %bool% will work on certain messages, depending on the 
+#   - some new tags will be added like 
+
+plugin:
+# PLUGIN PREFIX USED BEFORE "ERROS" AND "INFOS" MESSAGES
+  tag: "[onlineplayersgui]"
+
+# SOUND PLAYED ON FIRST PLAYER CONNECTION (SINCE THE PLUGIN AS BEEN INSTALLED)
+  welcome_sound: LEVEL_UP
+
+# ACTIVATE OR NO THE PLUGINS THAT ONP WILL USE: AUTORANK (FOR PLAYER PLAY-TIME) AND VAULT ( FOR THE ECONOMY (MONEY) ).
+  addons:
+    Autorank: false
+    Vault: false
+  commands:
+    super_perm: "onp.*"
+    onp_help:
+      permission: "onp.help"
+      permission_error: "NONE"
+    onp_show:
+      permission: "onp.show"
+      permission_error: "NONE"
+    onp_player:
+      permission: "onp.show_player"
+      permission_error: "NONE"
+    onp_togglesound:
+      permission: "onp.togglesound"
+      permission_error: "NONE"
+    onp_reload:
+      permission: "onp.reload"
+      permission_error: "NONE"
+    onp_convert:
+      permission: "onp.convert"
+      permission_error: "NONE"
+# ENTER ESSENTIALS WARP NAMES IN THIS ARRAY TO CREATE COMMANDS. e.g: ["warp_spawn","warp_shop"] will create the commands /warp_spawn and /warp_shop (they do the exact same thing as /warp warp_spawn or /warp warp_shop instead that they don't need any permissions and they don't send any messages to the player)
+# ERROR MESSAGES ARE CUSTOMIZABLE IN THE CONFIG (path: plugin.messages.errors.shortWarps)
+    short_warps: []
+    short_warps_tp_sound: ENDERMAN_TELEPORT
+
+# COMMON MESSAGES USED BY THE PLUGIN
+  messages:
+    errors:
+      tooMuchPlayers: "  Il y a plus de 54 joueurs en ligne sur ce serveur. Le plugin ne supporte actuellement pas plus de 54 joueurs max. Merci de patienter une future mise à jour."
+      commandBlockOrConsoleCommand: " La console et les commands blocks ne peuvent pas utiliser les commandes de %pluginName% !"
+      unknown: " &cUne erreur inconnue s'est produite !"
+      permission_plugin: "onp.use_plugin"
+      permission_plugin_error: " Tu n'as pas la permission d'utiliser ce plugin !"
+# WHEN SOMEONE DOES NOT HAVE PERMISSION TO USE A COMMAND
+      permission_command: " Tu n'as pas la permission d'utiliser cette commande / fonctionnalité !"
+      shortWarps:
+        warpNotExists: " Désolé mais le warp [%warp%] n'existe plus !"
+        warpWorldNotExists: " Désolé mais le monde dans lequel de warp [%warp%] est n'existe plus (ou n'est pas chargé) !"
+    infos:
+      reload: "  Le plugin et sa configuration ont été rechargés."
+# WHEN PLAYER USES /onp togglesound COMMAND
+      toggleSound: ' Tu as maintenant les sons des menus: %bool%'
+# DEFINES THE SENT LINES WHEN /onp help IS UED (JSON NOT SUPPORTED ATM)
+    help:
+      title: '       %tag% %pluginVersion% by %author%'
+      separator: '&7&m-----------------------------------------------------'
+      cmd_help: '  - fais /onp help pour afficher ce message.'
+      cmd_show: '  - fais /onp show pour afficher l''interface des joueurs.'
+      cmd_player: '  - fais /onp <pseudo> pour afficher l''interface du joueur.'
+      cmd_togglesound: '  - fais /onp togglesound pour ne plus entendre les sons.'
+      cmd_reload: '  - fais /onp reload pour recharger le fichier de configuration.'
+# THESE |↑| ARE THE LINES YOU CAN USE (YOU CAN ADD CUSTOM LINES) IN YOUR CUSTOM DISPLAY. SET CUSTOM_DIPSLAY TO AN EMPTY ARRAY ("[]" without quotes) TO USE THE DEFAULT HELP DISPLAY.
+      custom_display:
+        - separator
+        - title
+        - separator
+        - cmd_help
+        - cmd_show
+        - cmd_player
+        - cmd_togglesound
+        - cmd_reload
+        - separator
+
+####################################################################################################################################################################################################################
+##  #                                                                          [-------------------------------------]                                                                                         #  ##
+##  #                                                                          |------ GUIS CUSTOMIZATION PART: -----|                                                                                         #  ##
+##  #                                                                          [-------------------------------------]                                                                                         #  ##
+####################################################################################################################################################################################################################
+
+guis:
+  main:
+    title: "SRV: Joueurs"
+    permission: "onp.gui_main"
+    permission_error: " Tu n'as pas la permission d'utiliser l'interface !"
+
+  more:
+    title: "SRV: Options"
+    permission: "onp.gui_more"
+    permission_error: " Tu n'as pas la permission d'utiliser les actions supplémentaires sur %target% !"
+
+  jails:
+    title: "SRV: Prisons"
+    permission: "onp.gui_jails"
+    permission_error: " Tu n'as pas la permission de voir les prisons du serveur !"
+
+  homes:
+    title: "SRV: Maisons"
+    permission: "onp.gui_homes"
+    permission_error: " Tu n'as pas la permission de voir les maisons de %target% !"
+
+####################################################################################################################################################################################################################
+##  #                                                                          [-------------------------------------]                                                                                         #  ##
+##  #                                                                          |----- MENUS CUSTOMIZATION PART: -----|                                                                                         #  ##
+##  #                                                                          [-------------------------------------]                                                                                         #  ##
+####################################################################################################################################################################################################################
+
+# MENUS CUSTOMIZATION :
+#   - SOUNDS: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html (NONE = NO SOUND)
+#   - MATERIAL (ITEM): https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html (NONE = WILL HIDE THE FEATURE)
+#   - TITLE: DISPLAY NAME OF THE ITEM
+#   - LORE: STRING LIST, EACH STRING CORRESPONDS TO A LINE OF THE LORE
+#   - ON_CLICK_SOUND: SOUND PLAYED WHEN THE ITEM IS CLICKED
+#   - PERMISSION: CUSTOM PERMISSION REQUIRED TO USE THE FEATURE. LEAVE IT TO "NONE" IF YOU WANT TO USE THE BASIC PERMISSION ERROR MESSAGE (plugin.messages.errors.permission_command)
+#   - PERMISSION_MESSAGE: MESSAGE SENT TO THE PLAYER IF THE PLAYER DOES NOT HAVE PERMISSION TO USE THE FEATURE
+#   - SUCCESSFUL: MESSAGE SENT WHEN THE COMMAND IS SUCCESSFULLY EXECUTED
+#   - 
+menus:
+# WHEN YOU CLICK ON A MENU THAT DOESN'T HAVE ANY SOUND CUSTOMIZABLE
+  menus_click_sound: STEP_STONE
+
+  #NO "SUCCESSFUL" & NO "ERRORS" BECAUSE IT'S AN ITEM WITHOUT ANY ACTION
+  infoItem:
+    material: PAPER
+    title: "Fiche de renseignements de [%target%]"
+    permission: "onp.player_info_paper"
+
+
+  tp_player:
+    permission: "onp.tp_player"
+    permission_error: " Tu n'as pas la permission de te téléporter à %target% !"
+    tp_sound: ENDERMAN_TELEPORT
+    successful: " Vous avez été téléporté à %target% !"
+
+
+  tp_lastpos:
+    material: EYE_OF_ENDER
+    title: "Se téléporter à la dernière position"
+    permission: "onp.tp_lastpos"
+    permission_error: "NONE"
+    tp_sound: ENDERMAN_TELEPORT
+    successful: " Vous avez été téléporté à la dernière position de %target% !"
+
+
+  repair:
+    material: ANVIL
+    title: "Réparer les items"
+    permission: "onp.repair"
+    permission_error: "NONE"
+    on_click_sound: ANVIL_USE
+    successful: " Tu as réparé tous les items de %target% !"
+    errors:
+      noDamageables: " %target% n'a pas d'items à réparer sur lui !"
+
+
+  openEnderchest:
+    material: ENDER_CHEST
+    title: "Ouvrir l'Enderchest"
+    permission: "onp.openEnderchest"
+    permission_error: "NONE"
+    on_click_sound: CHEST_OPEN
+    successful: " Tu as ouvert l'Enderchest de %target% !"
+
+
+  openInv:
+    material: CHEST
+    title: "Ouvrir l'Inventaire"
+    permission: "onp.openInv"
+    permission_error: "NONE"
+    on_click_sound: CHEST_OPEN
+    successful: " Tu as ouvert l'inventaire de %target% !"
+
+
+  mute:
+    mute:
+      material: "RECORD_11"
+      title: "Rendre muet"
+      permission: "onp.mute.mute"
+      permission_error: "NONE"
+      on_click_sound: SHEEP_SHEAR
+      successful: " Tu as coupé la parole à %target% !"
+    unmute:
+      material: "RECORD_11"
+      title: "Rendre la parole"
+      permission: "onp.mute.unmute"
+      permission_error: "NONE"
+      on_click_sound: CAT_MEOW
+      successful: " Tu as redonné la parole à %target% !"
+
+
+#NOTE: NO "PERMISSION" HERE, BECAUSE IT IS DEFINED IN gui.jails
+#EXEMPT PERMISSIONS ARE AUTOMATICALLY GENERATED FROM THE PERMISSION. e.g: onp.jail  ->  onp.jail.exempt
+  jails:
+    title: "Envoyer en prison"
+    material: IRON_FENCE
+    cell:
+      material: IRON_FENCE
+      title: "Prison: [%jail%]"
+      permission: "onp.jail"
+      permission_error: "NONE"
+      on_click_sound: ANVIL_USE
+      successful_sender: " Tu as emprisonné %target% !"
+      successful_target: " %sender% vous a placé en détention dans la prison [%jail%] grâce à %prefix%(%pluginName%) v%pluginVersion% par %author%"
+      errors:
+        doesntExist: " La prison [%jail] n''existe pas !"
+        alreadyJailed: " %target% est déjà en prison !"
+    make_free:
+      material: ACACIA_DOOR_ITEM
+      title: "Libérer %target%"
+      permission: "onp.make_free"
+      permission_error: "NONE"
+      on_click_sound: DOOR_OPEN
+      successful_sender: " Tu as rendu sa liberté à %target% !"
+      successful_target: " %sender% vous a rendu votre liberté !"
+      errors:
+        notJailed: " %target% n''est pas en prison !"
+
+
+#NO "PERMISSION" HERE, BECAUSE IT IS DEFINED IN gui.homes
+  homes:
+    material: BED
+    title: "Cambrioler la/les maison(s)"
+    home:
+      material: BED
+      title: 'Maison: [%home%]'
+      permission: "onp.tp_home"
+      permission_error: "NONE"
+      tp_sound: ENDERMAN_TELEPORT
+      successful: " Tu as été téléporté à la maison [%home%] de %target% !"
+      errors:
+        doesntExist: " La maison [%home%] n'existe pas !"
+
+
+#NO PERMISSION HERE BECAUSE IT'S NOT LOGICAL TO PREVENT SOMEONE FROM GOING BACK IN THE MENUS
+#NO SUCCESSFUL MESSAGE BECAUSE IT'S A COMMON ACTION
+  back:
+    title: "Retour"
+    on_click_sound: STEP_SAND
+
+
+#EXEMPT PERMISSIONS ARE AUTOMATICALLY GENERATED FROM THE PERMISSION. e.g: onp.kick  ->  onp.kick.exempt
+  kick:
+    material: LEATHER_BOOTS
+    title: "Ejecter du serveur"
+    permission: "onp.kick"
+    permission_error: "NONE"
+    on_click_sound: DOOR_CLOSE
+    successful_sender: " Tu as éjecté %target% du serveur !"
+    successful_target: " Vous avez été éjecté du serveur par %sender% grâce à %prefix%(%pluginName%) v%pluginVersion% par %author% !"
+
+
+#EXEMPT PERMISSIONS ARE AUTOMATICALLY GENERATED FROM THE PERMISSION. e.g: onp.ban  ->  onp.ban.exempt
+  ban:
+    material: BARRIER
+    title: "Bannir du serveur"
+    permission: "onp.ban"
+    permission_error: "NONE"
+    on_click_sound: ANVIL_LAND
+    successful_sender: " Tu as banni %target% du serveur !"
+    successful_target: " Vous avez été banni du serveur par %sender% grâce à %prefix%(%pluginName%) v%pluginVersion% par %author%"
+    successful_unban: " Tu as débanni %target% du serveur !"
+    errors:
+      alreadyBanned: " %target% est déjà banni !"
+      notBanned: " %target% n'est pas banni !"
+
+
+  mail:
+    material: EMPTY_MAP
+    title: "Envoyer un mail à [%target%]"
+    permission: "onp.mail"
+    permission_error: "NONE"
+    on_mail_sent_sound: ENDERDRAGON_WINGS
+    sent: " Ton mail a été envoyé avec succès à [%target%]"
+    send: " Entre dans le chat ce que tu veux envoyer à [%target%]"
+    errors:
+      tookTooMuchTime: " Tu as pris trop de temps avant d'écrire ton mail (+ d'une minute)."
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#-BIG THANKS TO LEGENDS CRAFT AND CRAFT YOUR WORLD, TWO SERVERS WHERE I AM (OR I WAS) A DEVELOPER AND WHO SUPPORTED ME WHILE DEVELOPING THIS PLUGIN. THEY ALSO BRANG ME PRIVATE TEST SERVERS TO MAKE MY PLUGINS !-#
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
