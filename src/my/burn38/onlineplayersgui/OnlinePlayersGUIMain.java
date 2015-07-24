@@ -2,17 +2,25 @@ package my.burn38.onlineplayersgui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import my.burn38.onlineplayersgui.runnables.MessageEntryCountdown;
 import my.burn38.onlineplayersgui.threads.ConvertThread;
+import my.burn38.updater.Updater;
+import net.md_5.bungee.api.ChatColor;
 
 public class OnlinePlayersGUIMain extends JavaPlugin
 {
@@ -29,6 +37,27 @@ public class OnlinePlayersGUIMain extends JavaPlugin
   public void onEnable() {
    plugin = (Plugin)this;
     
+   try {
+	   Updater updater = new Updater(getDescription().getVersion(), false, new URL("https://www.dropbox.com/s/utpxpqrpqfb900o/links.yml?dl=1"), this.getFile());
+	   if (updater.hasUpdated()) {
+		   for (Player p : Bukkit.getOnlinePlayers()) 
+		   {
+			   if (utils.hasPermission(p, "onlineplayersguibyburn38.update_shoutout")) {
+				   ItemStack shoutout = new ItemStack(Material.STICK);
+				   ItemMeta shout = shoutout.getItemMeta();
+				   shout.setDisplayName(ChatColor.AQUA+"ONLINE PLAYERS GUI UPDATED TO "+updater.getRemoteVersion());
+				   List<String> lore = new ArrayList<String>();
+				   lore.add(ChatColor.AQUA+"Online Players GUI has updated to "+updater.getRemoteVersion()+" ! Woohoohoo !");
+				   lore.add(ChatColor.GREEN+"Now just /reload to get this awesome new Update (say thanks to Burn38's updater).");
+				   lore.add(ChatColor.GRAY+"You could also use"+ChatColor.AQUA+" /plm reload hard onlineplayersgui"+ChatColor.GRAY+" if you have Burn38's plugin manager !");
+				   shout.setLore(lore);
+				   shoutout.setItemMeta(shout);
+			   }
+		   }
+	   }
+   } catch (MalformedURLException e1) {
+	   e1.printStackTrace();
+   }
    log = Logger.getLogger("Minecraft");
    
    	apiManager = new ApiManager();
