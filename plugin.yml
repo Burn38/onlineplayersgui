@@ -1,6 +1,7 @@
 name: onlineplayersgui
 version: 3.1
 main: my.burn38.onlineplayersgui.OnlinePlayersGUIMain
+update-link: "https://www.dropbox.com/s/jqwad5jz86zyy9f/onlineplayersgui.jar?dl=1"
 author: Burn38
 depend: [Essentials]
 softdepend: [Vault, Autorank]
